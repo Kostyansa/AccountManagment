@@ -13,13 +13,19 @@ public class ConcurrentUserServiceImpl implements ConcurrentUserService {
 
     UserService userService = Configuration.getUserService();
 
-    private ReentrantLock lockLock = new ReentrantLock();
+    private final ReentrantLock lockLock = new ReentrantLock();
 
     private void lockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
         Lock senderWriteLock = sender.getWriteLock();
         Lock recipientWriteLock = recipient.getWriteLock();
-        senderWriteLock.lock();
-        recipientWriteLock.lock();
+        lockLock.lock();
+        try {
+            senderWriteLock.lock();
+            recipientWriteLock.lock();
+        }
+        finally {
+            lockLock.unlock();
+        }
     }
 
     private void unlockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
@@ -32,10 +38,9 @@ public class ConcurrentUserServiceImpl implements ConcurrentUserService {
     public boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, long amount) throws NotEnoughFundsException {
         lockUsers(sender, recipient);
         try {
-            userService.transfer(sender.getUser(), recipient.getUser(), amount);
+            return userService.transfer(sender.getUser(), recipient.getUser(), amount);
         } finally {
             unlockUsers(sender, recipient);
         }
-        return false;
     }
 }

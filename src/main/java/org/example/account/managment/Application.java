@@ -7,6 +7,9 @@ import org.example.account.managment.service.concurrent.ConcurrentUserService;
 import org.example.account.managment.service.concurrent.ConcurrentUserServiceImpl;
 import org.example.account.managment.service.exception.NotEnoughFundsException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Application {
 
     public static void main(String[] args) {
@@ -19,27 +22,32 @@ public class Application {
         ConcurrentUser concurrentUser = new ConcurrentUser(user);
         ConcurrentUser concurrentUser1 = new ConcurrentUser(user1);
         ConcurrentUserService concurrentUserService = new ConcurrentUserServiceImpl();
-        Thread thread = new Thread(() -> {
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 1000; i++){
+            threads.add(new Thread(() -> {
+                try {
+                    concurrentUserService.concurrentTransfer(concurrentUser, concurrentUser1, 10);
+                } catch (NotEnoughFundsException e) {
+                    e.printStackTrace();
+                }
+            }));
+            threads.add(new Thread(() -> {
+                try {
+                    concurrentUserService.concurrentTransfer(concurrentUser1, concurrentUser, 10);
+                } catch (NotEnoughFundsException e) {
+                    e.printStackTrace();
+                }
+            }));
+        }
+        for(Thread thread : threads){
+            thread.start();
+        }
+        for(Thread thread : threads){
             try {
-                concurrentUserService.concurrentTransfer(concurrentUser, concurrentUser1, 60);
-            } catch (NotEnoughFundsException e) {
+                thread.join();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        });
-        Thread thread1 = new Thread(() -> {
-            try {
-                concurrentUserService.concurrentTransfer(concurrentUser1, concurrentUser, 150);
-            } catch (NotEnoughFundsException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-        thread1.start();
-        try {
-            thread.join();
-            thread1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
         System.out.println(user.getAmount());
         System.out.println(user1.getAmount());
