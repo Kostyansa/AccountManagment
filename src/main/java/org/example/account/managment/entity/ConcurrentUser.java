@@ -1,12 +1,13 @@
 package org.example.account.managment.entity;
 
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ConcurrentUser {
 
     private User user;
 
-    transient private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    transient private final ReentrantLock lock = new ReentrantLock();
 
     public ConcurrentUser(User user) {
         this.user = user;
@@ -20,15 +21,7 @@ public class ConcurrentUser {
         return user;
     }
 
-    public ReentrantReadWriteLock.ReadLock getReadLock(){
-        return lock.readLock();
-    }
-
-    public ReentrantReadWriteLock.WriteLock getWriteLock(){
-        return lock.writeLock();
-    }
-
-    public ReentrantReadWriteLock getLock(){
+    public ReentrantLock getLock(){
         return lock;
     }
 }

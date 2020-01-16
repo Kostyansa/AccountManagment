@@ -23,19 +23,23 @@ public class Application {
         ConcurrentUser concurrentUser1 = new ConcurrentUser(user1);
         ConcurrentUserService concurrentUserService = new ConcurrentUserServiceImpl();
         List<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 10; i++){
             threads.add(new Thread(() -> {
-                try {
-                    concurrentUserService.concurrentTransfer(concurrentUser, concurrentUser1, 10);
-                } catch (NotEnoughFundsException e) {
-                    e.printStackTrace();
+                for (int j = 0; j < 10; j++) {
+                    try {
+                        concurrentUserService.concurrentTransfer(concurrentUser, concurrentUser1, 10);
+                    } catch (NotEnoughFundsException e) {
+                        System.out.println("Not enough funds");
+                    }
                 }
             }));
             threads.add(new Thread(() -> {
-                try {
-                    concurrentUserService.concurrentTransfer(concurrentUser1, concurrentUser, 10);
-                } catch (NotEnoughFundsException e) {
-                    e.printStackTrace();
+                for (int j = 0; j < 10; j++) {
+                    try {
+                        concurrentUserService.concurrentTransfer(concurrentUser1, concurrentUser, 10);
+                    } catch (NotEnoughFundsException e) {
+                        System.out.println("Not enough funds");
+                    }
                 }
             }));
         }
