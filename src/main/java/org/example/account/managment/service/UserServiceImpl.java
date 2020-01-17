@@ -1,9 +1,7 @@
 package org.example.account.managment.service;
 
 import org.example.account.managment.entity.User;
-import org.example.account.managment.service.exception.NotEnoughFundsException;
-
-import java.math.BigDecimal;
+import org.example.account.managment.exception.NotEnoughFundsException;
 
 public class UserServiceImpl implements UserService {
 

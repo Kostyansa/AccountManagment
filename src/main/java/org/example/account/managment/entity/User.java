@@ -12,6 +12,10 @@ public class User {
 
     private Double amount;
 
+    private String name;
+
+    private String PhoneNumber;
+
     public Long getId() {
         return id;
     }
@@ -26,5 +30,21 @@ public class User {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
     }
 }

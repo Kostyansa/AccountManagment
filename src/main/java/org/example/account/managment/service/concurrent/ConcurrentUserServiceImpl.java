@@ -3,7 +3,7 @@ package org.example.account.managment.service.concurrent;
 import org.example.account.managment.configuration.Configuration;
 import org.example.account.managment.entity.ConcurrentUser;
 import org.example.account.managment.service.UserService;
-import org.example.account.managment.service.exception.NotEnoughFundsException;
+import org.example.account.managment.exception.NotEnoughFundsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

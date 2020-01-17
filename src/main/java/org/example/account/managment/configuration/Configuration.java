@@ -7,7 +7,10 @@ public class Configuration {
 
     private static final UserService userService = new UserServiceImpl();
 
+    private static final String path = "";
+
     public static UserService getUserService(){
         return userService;
     }
+
 }

@@ -5,7 +5,7 @@ import org.example.account.managment.entity.ConcurrentUser;
 import org.example.account.managment.entity.User;
 import org.example.account.managment.service.concurrent.ConcurrentUserService;
 import org.example.account.managment.service.concurrent.ConcurrentUserServiceImpl;
-import org.example.account.managment.service.exception.NotEnoughFundsException;
+import org.example.account.managment.exception.NotEnoughFundsException;
 
 import java.util.ArrayList;
 import java.util.List;
