@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class RandomUserGenerator {
+public class RandomGenerator {
 
     private static final int ID_RANGE = 200;
 
@@ -46,5 +46,34 @@ public class RandomUserGenerator {
             randomLock.unlock();
         }
         return user;
+    }
+
+    public static Long nextId(){
+        long id = 0L;
+        randomLock.lock();
+        try{
+            id = (long) random.nextInt(ID_RANGE);
+        }
+        finally {
+            randomLock.unlock();
+        }
+        return id;
+    }
+
+    public static double nextAmount(){
+        double amount = 0L;
+        randomLock.lock();
+        try{
+            if (random.nextDouble() < 0.9) {
+                amount = random.nextInt(MAX_BALANCE_TO_TWO_DIGITS) * 2 * 0.01;
+            }
+            else{
+                amount = random.nextDouble()*MAX_BALANCE_TO_TWO_DIGITS * 2 * 0.01;
+            }
+        }
+        finally {
+            randomLock.unlock();
+        }
+        return amount;
     }
 }

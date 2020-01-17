@@ -2,17 +2,19 @@ package org.example.account.managment.service.concurrent;
 
 import org.example.account.managment.configuration.Configuration;
 import org.example.account.managment.entity.ConcurrentUser;
+import org.example.account.managment.entity.User;
+import org.example.account.managment.exception.IllegalRecipientException;
 import org.example.account.managment.service.UserService;
 import org.example.account.managment.exception.NotEnoughFundsException;
+import org.example.account.managment.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.locks.Lock;
 
-public class ConcurrentUserServiceImpl implements ConcurrentUserService {
-    Logger logger = LoggerFactory.getLogger(ConcurrentUserService.class);
+public class ConcurrentUserServiceWrapper extends UserServiceImpl {
 
-    UserService userService = Configuration.getUserService();
+    Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private void lockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
         Lock firstLock;
@@ -40,10 +42,15 @@ public class ConcurrentUserServiceImpl implements ConcurrentUserService {
         firstLock.unlock();
     }
 
-    public boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, long amount) throws NotEnoughFundsException {
+    @Override
+    public boolean transfer(User sender, User recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException {
+        return this.concurrentTransfer(new ConcurrentUser(sender), new ConcurrentUser(recipient), amount);
+    }
+
+    private boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException {
         lockUsers(sender, recipient);
         try {
-            return userService.transfer(sender.getUser(), recipient.getUser(), amount);
+            return super.transfer(sender.getUser(), recipient.getUser(), amount);
         } finally {
             unlockUsers(sender, recipient);
         }

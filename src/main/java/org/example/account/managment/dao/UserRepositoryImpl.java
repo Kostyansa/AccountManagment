@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    public Map<Long,User> users;
+    private final Map<Long,User> users;
 
     public UserRepositoryImpl(URI uri){
         users = new HashMap<>();
