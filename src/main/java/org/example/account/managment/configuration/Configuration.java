@@ -28,7 +28,7 @@ public class Configuration {
         } catch (URISyntaxException e) {
             throw new ServiceConfigurationError("User Repository has not been initialized", e);
         }
-    };
+    }
 
 
     public static UserService getUserService(){

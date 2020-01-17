@@ -43,11 +43,11 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
     }
 
     @Override
-    public boolean transfer(User sender, User recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException {
+    public boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
         return this.concurrentTransfer(new ConcurrentUser(sender), new ConcurrentUser(recipient), amount);
     }
 
-    private boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException {
+    private boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
         lockUsers(sender, recipient);
         try {
             return super.transfer(sender.getUser(), recipient.getUser(), amount);

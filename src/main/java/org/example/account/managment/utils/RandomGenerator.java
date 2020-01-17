@@ -34,7 +34,7 @@ public class RandomGenerator {
         randomLock.lock();
         try {
             user.setId((long) random.nextInt(ID_RANGE));
-            user.setAmount(random.nextInt(MAX_BALANCE_TO_TWO_DIGITS)*0.01);
+            user.setAmount((long) random.nextInt(MAX_BALANCE_TO_TWO_DIGITS));
             user.setName(names.get(random.nextInt(names.size())));
             StringBuilder phoneNumber = new StringBuilder().append("+79");
             for (int i = 0; i < 9; i++){
@@ -52,7 +52,7 @@ public class RandomGenerator {
         long id = 0L;
         randomLock.lock();
         try{
-            id = (long) random.nextInt(ID_RANGE);
+            id = random.nextInt(ID_RANGE);
         }
         finally {
             randomLock.unlock();
@@ -60,16 +60,11 @@ public class RandomGenerator {
         return id;
     }
 
-    public static double nextAmount(){
-        double amount = 0L;
+    public static long nextAmount(){
+        long amount = 0L;
         randomLock.lock();
         try{
-            if (random.nextDouble() < 0.9) {
-                amount = random.nextInt(MAX_BALANCE_TO_TWO_DIGITS) * 2 * 0.01;
-            }
-            else{
-                amount = random.nextDouble()*MAX_BALANCE_TO_TWO_DIGITS * 2 * 0.01;
-            }
+            amount = random.nextInt(MAX_BALANCE_TO_TWO_DIGITS) * 2;
         }
         finally {
             randomLock.unlock();

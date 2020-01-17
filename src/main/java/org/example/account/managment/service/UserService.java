@@ -7,7 +7,7 @@ import org.example.account.managment.exception.UserNotFoundException;
 
 public interface UserService {
 
-    boolean transfer(User sender, User recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException;
+    boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException;
 
     User getUser(Long id) throws UserNotFoundException;
 }

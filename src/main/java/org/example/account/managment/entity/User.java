@@ -1,20 +1,24 @@
 package org.example.account.managment.entity;
 
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 public class User {
 
     private Long id;
 
-    private Double amount;
+    private Long amount;
 
     private String name;
 
     private String PhoneNumber;
+
+    public User() {
+    }
+
+    public User(Long id, Long amount, String name, String phoneNumber) {
+        this.id = id;
+        this.amount = amount;
+        this.name = name;
+        PhoneNumber = phoneNumber;
+    }
 
     public Long getId() {
         return id;
@@ -24,11 +28,11 @@ public class User {
         this.id = id;
     }
 
-    public Double getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 
@@ -46,5 +50,15 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         PhoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", amount=" + amount/100 + "." + amount%100 +
+                ", name='" + name + '\'' +
+                ", PhoneNumber='" + PhoneNumber + '\'' +
+                '}';
     }
 }

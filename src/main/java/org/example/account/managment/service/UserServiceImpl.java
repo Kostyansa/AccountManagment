@@ -11,7 +11,7 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository = Configuration.getUserRepository();
 
-    public boolean transfer(User sender, User recipient, double amount) throws NotEnoughFundsException, IllegalRecipientException {
+    public boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
         if (sender == null){
             throw new NullPointerException("Sender cannot be Null");
         }

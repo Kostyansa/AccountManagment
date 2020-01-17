@@ -30,7 +30,7 @@ public class UserTransferController implements Runnable {
     public void run() {
         while (counter.getAndIncrement() < Configuration.operationNumber){
             Long idToTransfer = RandomGenerator.nextId();
-            double amountToTransfer = RandomGenerator.nextAmount();
+            long amountToTransfer = RandomGenerator.nextAmount();
             try{
                 User recipient = userService.getUser(idToTransfer);
                 userService.transfer(this.user, recipient, amountToTransfer);
