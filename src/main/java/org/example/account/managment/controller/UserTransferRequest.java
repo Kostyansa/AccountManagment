@@ -50,7 +50,7 @@ public class UserTransferRequest implements Runnable {
             }
         } catch (NumberFormatException e) {
             logger.trace(String.format("Input for amount %s is not valid", amount));
-            //System.out.println("Amount to transfer is not valid");
+            System.out.println("Amount to transfer is not valid");
             return;
         }
         try {
@@ -59,15 +59,15 @@ public class UserTransferRequest implements Runnable {
             userService.transfer(sender, recipient, amountToTransfer);
         } catch (UserNotFoundException e) {
             logger.trace(String.format("Transaction from %s failed because User with id %s has not been found", user, idToTransfer));
-            //System.out.println("Transaction failed recipient cannot be found");
+            System.out.println("Transaction failed recipient cannot be found");
             return;
         } catch (IllegalRecipientException e) {
             logger.trace(String.format("Transaction from %s failed because sender and recipient are the same", this.user));
-            //System.out.println("You cannot send transaction to yourself");
+            System.out.println("You cannot send transaction to yourself");
             return;
         } catch (NotEnoughFundsException e) {
             logger.trace(String.format("Transaction from %s failed because user don't have enough money", user));
-            //System.out.println("Balance is too low");
+            System.out.println("Balance is too low");
             return;
         }
         logger.trace("Transfer executed successfully");
