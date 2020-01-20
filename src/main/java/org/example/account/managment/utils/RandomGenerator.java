@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class RandomGenerator {
 
-    private static final int ID_RANGE = 200;
+    private static final int ID_RANGE = 12;
 
     private static final int MAX_BALANCE_TO_TWO_DIGITS = 50000;
 
@@ -48,8 +48,27 @@ public class RandomGenerator {
         return user;
     }
 
+    public static User nextUser(int id){
+        User user = new User();
+        randomLock.lock();
+        try {
+            user.setId((long) id);
+            user.setAmount((long) random.nextInt(MAX_BALANCE_TO_TWO_DIGITS));
+            user.setName(names.get(random.nextInt(names.size())));
+            StringBuilder phoneNumber = new StringBuilder().append("+79");
+            for (int i = 0; i < 9; i++){
+                phoneNumber.append(random.nextInt(10));
+            }
+            user.setPhoneNumber(phoneNumber.toString());
+        }
+        finally {
+            randomLock.unlock();
+        }
+        return user;
+    }
+
     public static Long nextId(){
-        long id = 0L;
+        long id;
         randomLock.lock();
         try{
             id = random.nextInt(ID_RANGE);
@@ -60,15 +79,15 @@ public class RandomGenerator {
         return id;
     }
 
-    public static long nextAmount(){
-        long amount = 0L;
+    public static String nextAmount(){
+        double amount;
         randomLock.lock();
         try{
-            amount = random.nextInt(MAX_BALANCE_TO_TWO_DIGITS) * 2;
+            amount = random.nextInt(MAX_BALANCE_TO_TWO_DIGITS) * 2*0.01;
         }
         finally {
             randomLock.unlock();
         }
-        return amount;
+        return Double.toString(amount);
     }
 }

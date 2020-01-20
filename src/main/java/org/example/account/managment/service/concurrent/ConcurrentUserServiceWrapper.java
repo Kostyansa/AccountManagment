@@ -14,7 +14,7 @@ import java.util.concurrent.locks.Lock;
 
 public class ConcurrentUserServiceWrapper extends UserServiceImpl {
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private void lockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
         Lock firstLock;
@@ -27,18 +27,18 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
             firstLock = recipient.getLock();
             secondLock = sender.getLock();
         }
-        logger.trace(String.format("Tried to lock: %s", firstLock.toString()));
+        //logger.trace(String.format("Tried to lock: %s", firstLock.toString()));
         firstLock.lock();
-        logger.trace(String.format("Tried to lock: %s", secondLock.toString()));
+        //logger.trace(String.format("Tried to lock: %s", secondLock.toString()));
         secondLock.lock();
     }
 
     private void unlockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
         Lock firstLock = sender.getLock();
         Lock secondLock = recipient.getLock();
-        logger.trace(String.format("Tried to unlock: %s", secondLock.toString()));
+        //logger.trace(String.format("Tried to unlock: %s", secondLock.toString()));
         secondLock.unlock();
-        logger.trace(String.format("Tried to unlock: %s", firstLock.toString()));
+        //logger.trace(String.format("Tried to unlock: %s", firstLock.toString()));
         firstLock.unlock();
     }
 

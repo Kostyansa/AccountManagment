@@ -1,6 +1,8 @@
 package org.example.account.managment.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private Long id;
 

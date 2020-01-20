@@ -9,7 +9,7 @@ import org.example.account.managment.exception.UserNotFoundException;
 
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository = Configuration.getUserRepository();
+    private UserRepository userRepository = Configuration.getUserRepository();
 
     public boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
         if (sender == null){

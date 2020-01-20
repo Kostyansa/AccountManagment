@@ -1,22 +1,52 @@
 package org.example.account.managment.dao;
 
+import org.example.account.managment.configuration.Configuration;
 import org.example.account.managment.entity.User;
 import org.example.account.managment.exception.UserNotFoundException;
+import org.example.account.managment.utils.RandomGenerator;
 
+import java.io.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserRepositoryImpl implements UserRepository {
 
     private final Map<Long,User> users;
 
-    public UserRepositoryImpl(URI uri){
-        users = new HashMap<>();
+    public UserRepositoryImpl(List<User> users){
+        this.users = Collections.synchronizedMap(
+                users.stream().collect(Collectors.toMap(User::getId, (User user) -> user))
+        );
     }
 
+   public UserRepositoryImpl(String path, long accountNumber) throws IOException, ClassNotFoundException {
+       List<User> users = new LinkedList<>();
+       for (int i = 0; i < accountNumber; i++) {
+           try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path + i))) {
+               users.add((User) inputStream.readObject());
+           }
+       }
+       this.users = Collections.synchronizedMap(
+               users.stream().collect(Collectors.toMap(User::getId, (User user) -> user))
+       );
+   }
+
+    public void saveCached(){
+        List<User> users = this.get();
+        for(int i = 0; i < users.size(); i++){
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.path + i))) {
+                User user = users.get(i);
+                outputStream.writeObject(user);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                throw new ServiceConfigurationError("File could not be written to", e);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ServiceConfigurationError("IO Exception", e);
+            }
+        }
+    }
 
     @Override
     public List<User> get() {
