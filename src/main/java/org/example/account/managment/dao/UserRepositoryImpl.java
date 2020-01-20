@@ -14,13 +14,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final Map<Long,User> users;
 
-    public UserRepositoryImpl(List<User> users){
-        this.users = Collections.synchronizedMap(
-                users.stream().collect(Collectors.toMap(User::getId, (User user) -> user))
-        );
-    }
+    private String path;
 
+    /**
+     * Creates User repository from folder with relative path:
+     * {@link UserRepositoryImpl#path} from files with consecutive names 0,1...
+     */
    public UserRepositoryImpl(String path, long accountNumber) throws IOException, ClassNotFoundException {
+       this.path = path;
        List<User> users = new LinkedList<>();
        for (int i = 0; i < accountNumber; i++) {
            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path + i))) {
@@ -32,10 +33,15 @@ public class UserRepositoryImpl implements UserRepository {
        );
    }
 
+   /**
+    * Writes any cached in {@link UserRepositoryImpl#users} User objects
+    * into folder with relative path: {@link UserRepositoryImpl#path}
+    * where name of the file is user Id
+    */
     public void saveCached(){
         List<User> users = this.get();
         for(int i = 0; i < users.size(); i++){
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.path + i))) {
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + i))) {
                 User user = users.get(i);
                 outputStream.writeObject(user);
             } catch (FileNotFoundException e) {

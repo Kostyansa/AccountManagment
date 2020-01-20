@@ -16,18 +16,27 @@ import java.util.ServiceConfigurationError;
 
 public class Configuration {
 
+    //Number of threads in a thread pool
     public static final int threadNumber = 20;
 
+    //Number of requests to execute
     public static final int operationNumber = 1000;
 
+    //Number of account files that will be created
     public static final int accountNumber = 10;
 
+    //Relative path to folder with user accounts
     public static final String path = "./temp/";
 
+    //User service bean
     private static UserService concurrentUserService;
 
+    //User repository bean
     private static UserRepository userRepository;
 
+    /**
+     * Creates {@link Configuration#accountNumber} accounts in {@link Configuration#path} folder
+     */
     public static void createUsers() {
         for (int i = 0; i < Configuration.accountNumber; i++) {
             try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.path + i))) {
@@ -42,6 +51,10 @@ public class Configuration {
             }
         }
     }
+
+    /*
+     * Initializes beans
+     */
 
     public static void init() {
         try {

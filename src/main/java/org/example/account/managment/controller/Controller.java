@@ -8,16 +8,19 @@ import java.util.concurrent.TimeUnit;
 
 public class Controller {
 
+    /**
+     * Thread pool uses fixed amount of threads defined in {@link Configuration#threadNumber}
+     */
     ExecutorService executorService = Executors.newFixedThreadPool(Configuration.threadNumber);
 
     public void ExecuteTask(UserTransferRequest request){
         executorService.submit(request);
     }
 
-    public void shutdown(){
-        executorService.shutdown();
-    }
-
+    /**
+     * Stops {@link Controller#executorService} from executing new tasks
+     * and waits 60 seconds before terminating existing tasks
+     */
     public void shutdownAndAwaitTermination() {
         executorService.shutdown(); // Disable new tasks from being submitted
         try {

@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.locks.Lock;
 
+/**
+ * Wrapper for {@link UserService} that enables {@linkplain UserService#transfer}
+ * to be executed concurrently
+ */
 public class ConcurrentUserServiceWrapper extends UserServiceImpl {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -19,6 +23,7 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
     private void lockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
         Lock firstLock;
         Lock secondLock;
+        //Using global ordering for deadlock resolving
         if (sender.getUser().getId() < recipient.getUser().getId()){
             firstLock = sender.getLock();
             secondLock = recipient.getLock();
@@ -41,6 +46,7 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
         logger.trace(String.format("Tried to unlock: %s", firstLock.toString()));
         firstLock.unlock();
     }
+
 
     @Override
     public boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {

@@ -3,6 +3,10 @@ package org.example.account.managment.entity;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Concurrent wrapper for {@link User}
+ * Can be replaced with synchronized keyword
+ */
 public class ConcurrentUser {
 
     private User user;

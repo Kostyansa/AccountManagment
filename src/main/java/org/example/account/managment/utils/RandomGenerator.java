@@ -5,7 +5,6 @@ import org.example.account.managment.entity.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RandomGenerator {

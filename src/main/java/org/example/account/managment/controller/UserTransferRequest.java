@@ -30,8 +30,13 @@ public class UserTransferRequest implements Runnable {
         this.amount = amount;
     }
 
+    /**
+     * Parses inputs for recipient Id and amount of money for transfer
+     * Then attempts transfer for user with {@link UserTransferRequest#user} id
+     */
     @Override
     public void run() {
+
         Long idToTransfer;
         try {
             idToTransfer = Long.parseLong(userId);
@@ -40,8 +45,10 @@ public class UserTransferRequest implements Runnable {
             System.out.println("Recipient id is not valid");
             return;
         }
+
         long amountToTransfer;
         try{
+            //Pattern that matches correct input for amount of money to transfer
             if (amount.matches("^\\d+[.]?\\d{0,2}$")) {
                 amountToTransfer = Long.parseLong(amount.replaceAll("[.]", ""));
             }
@@ -53,6 +60,7 @@ public class UserTransferRequest implements Runnable {
             System.out.println("Amount to transfer is not valid");
             return;
         }
+
         try {
             User sender = userService.getUser(user);
             User recipient = userService.getUser(idToTransfer);
@@ -70,6 +78,7 @@ public class UserTransferRequest implements Runnable {
             System.out.println("Balance is too low");
             return;
         }
+
         logger.trace("Transfer executed successfully");
     }
 }
