@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Wrapper for {@link UserService} that enables {@linkplain UserService#transfer}
+ * Wrapper for {@link UserServiceImpl} that enables {@linkplain UserServiceImpl#transfer}
  * to be executed concurrently
  */
 public class ConcurrentUserServiceWrapper extends UserServiceImpl {
