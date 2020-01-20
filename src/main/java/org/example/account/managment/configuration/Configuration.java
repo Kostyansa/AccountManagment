@@ -52,6 +52,21 @@ public class Configuration {
         }
     }
 
+    public static void createUsers(int accountNumber) {
+        for (int i = 0; i < accountNumber; i++) {
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.path + i))) {
+                User user = RandomGenerator.nextUser(i);
+                outputStream.writeObject(user);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                throw new ServiceConfigurationError("File could not be written to", e);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ServiceConfigurationError("IO Exception", e);
+            }
+        }
+    }
+
     /*
      * Initializes beans
      */

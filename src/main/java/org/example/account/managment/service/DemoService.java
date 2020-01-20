@@ -15,7 +15,7 @@ public class DemoService {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoService.class);
 
-    public void runDemo(){
+    public void runDemo(int operationNumber){
         Configuration.createUsers();
         Configuration.init();
         UserRepository userRepository = Configuration.getUserRepository();
@@ -27,7 +27,7 @@ public class DemoService {
         }
         System.out.println(String.format("Total amount: %s.%s", startingAmount/100, startingAmount%100));
         Controller controller = new Controller();
-        for (int i = 0; i < Configuration.operationNumber; i++){
+        for (int i = 0; i < operationNumber; i++){
             controller.ExecuteTask(new UserTransferRequest(
                     RandomGenerator.nextId(),
                     RandomGenerator.nextId().toString(),
@@ -47,5 +47,9 @@ public class DemoService {
         System.out.println("Is final amount equals starting amount?");
         System.out.println(startingAmount.equals(finalAmount) ? "yes" : "no");
         userRepository.saveCached();
+    }
+
+    public void runDemo(){
+        this.runDemo(Configuration.operationNumber);
     }
 }

@@ -4,6 +4,7 @@ import org.example.account.managment.exception.IllegalRecipientException;
 import org.example.account.managment.exception.NotEnoughFundsException;
 import org.example.account.managment.exception.UserNotFoundException;
 import org.example.account.managment.service.UserService;
+import org.example.account.managment.service.UserServiceImpl;
 import org.example.account.managment.service.concurrent.ConcurrentUserServiceWrapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +25,7 @@ public class UserServiceTest {
     UserRepository userRepository;
 
     @InjectMocks
-    ConcurrentUserServiceWrapper userService;
+    UserServiceImpl userService;
 
     @BeforeEach
     void initialize(){

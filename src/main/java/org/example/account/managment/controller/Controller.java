@@ -13,6 +13,13 @@ public class Controller {
      */
     ExecutorService executorService = Executors.newFixedThreadPool(Configuration.threadNumber);
 
+    public Controller() {
+    }
+
+    public Controller(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
     public void ExecuteTask(UserTransferRequest request){
         executorService.submit(request);
     }
