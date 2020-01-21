@@ -1,6 +1,7 @@
 package org.example.account.managment.entity;
 
 import java.io.Serializable;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class User implements Serializable {
 
@@ -11,6 +12,8 @@ public class User implements Serializable {
     private String name;
 
     private String PhoneNumber;
+
+    transient private final ReentrantLock lock = new ReentrantLock();
 
     public User() {
     }
@@ -52,6 +55,10 @@ public class User implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         PhoneNumber = phoneNumber;
+    }
+
+    public ReentrantLock getLock() {
+        return lock;
     }
 
     @Override

@@ -6,11 +6,8 @@ import org.example.account.managment.exception.IllegalRecipientException;
 import org.example.account.managment.exception.NotEnoughFundsException;
 import org.example.account.managment.exception.UserNotFoundException;
 import org.example.account.managment.service.UserService;
-import org.example.account.managment.utils.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserTransferRequest implements Runnable {
 
@@ -42,14 +39,14 @@ public class UserTransferRequest implements Runnable {
             idToTransfer = Long.parseLong(userId);
         } catch (NumberFormatException e) {
             logger.trace(String.format("Input for userId %s is not a valid id", userId));
-            System.out.println("Recipient id is not valid");
+            //System.out.println("Recipient id is not valid");
             return;
         }
 
         long amountToTransfer;
         try{
             //Pattern that matches correct input for amount of money to transfer
-            if (amount.matches("^\\d+[.]?\\d{0,2}$")) {
+            if (amount.matches("^\\d+[.]?\\d{2}$")) {
                 amountToTransfer = Long.parseLong(amount.replaceAll("[.]", ""));
             }
             else {
@@ -57,7 +54,7 @@ public class UserTransferRequest implements Runnable {
             }
         } catch (NumberFormatException e) {
             logger.trace(String.format("Input for amount %s is not valid", amount));
-            System.out.println("Amount to transfer is not valid");
+            //System.out.println("Amount to transfer is not valid");
             return;
         }
 
@@ -67,15 +64,15 @@ public class UserTransferRequest implements Runnable {
             userService.transfer(sender, recipient, amountToTransfer);
         } catch (UserNotFoundException e) {
             logger.trace(String.format("Transaction from %s failed because User with id %s has not been found", user, idToTransfer));
-            System.out.println("Transaction failed recipient cannot be found");
+            //System.out.println("Transaction failed recipient cannot be found");
             return;
         } catch (IllegalRecipientException e) {
             logger.trace(String.format("Transaction from %s failed because sender and recipient are the same", this.user));
-            System.out.println("You cannot send transaction to yourself");
+            //System.out.println("You cannot send transaction to yourself");
             return;
         } catch (NotEnoughFundsException e) {
             logger.trace(String.format("Transaction from %s failed because user don't have enough money", user));
-            System.out.println("Balance is too low");
+            //System.out.println("Balance is too low");
             return;
         }
 

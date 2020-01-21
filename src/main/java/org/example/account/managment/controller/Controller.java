@@ -1,6 +1,8 @@
 package org.example.account.managment.controller;
 
 import org.example.account.managment.configuration.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,13 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Controller {
 
-    /**
-     * Thread pool uses fixed amount of threads defined in {@link Configuration#threadNumber}
-     */
-    ExecutorService executorService = Executors.newFixedThreadPool(Configuration.threadNumber);
+    private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    public Controller() {
-    }
+    ExecutorService executorService;
 
     public Controller(ExecutorService executorService) {
         this.executorService = executorService;

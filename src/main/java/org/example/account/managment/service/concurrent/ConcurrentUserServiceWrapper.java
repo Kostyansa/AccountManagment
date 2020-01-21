@@ -1,7 +1,6 @@
 package org.example.account.managment.service.concurrent;
 
 import org.example.account.managment.configuration.Configuration;
-import org.example.account.managment.entity.ConcurrentUser;
 import org.example.account.managment.entity.User;
 import org.example.account.managment.exception.IllegalRecipientException;
 import org.example.account.managment.service.UserService;
@@ -18,13 +17,13 @@ import java.util.concurrent.locks.Lock;
  */
 public class ConcurrentUserServiceWrapper extends UserServiceImpl {
 
-    private final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final Logger logger = LoggerFactory.getLogger(ConcurrentUserServiceWrapper.class);
 
-    private void lockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
+    private void lockUsers(User sender, User recipient) {
         Lock firstLock;
         Lock secondLock;
         //Using global ordering for deadlock resolving
-        if (sender.getUser().getId() < recipient.getUser().getId()){
+        if (sender.getId() < recipient.getId()){
             firstLock = sender.getLock();
             secondLock = recipient.getLock();
         }
@@ -38,7 +37,7 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
         secondLock.lock();
     }
 
-    private void unlockUsers(ConcurrentUser sender, ConcurrentUser recipient) {
+    private void unlockUsers(User sender, User recipient) {
         Lock firstLock = sender.getLock();
         Lock secondLock = recipient.getLock();
         logger.trace(String.format("Tried to unlock: %s", secondLock.toString()));
@@ -50,13 +49,13 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
 
     @Override
     public boolean transfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
-        return this.concurrentTransfer(new ConcurrentUser(sender), new ConcurrentUser(recipient), amount);
+        return this.concurrentTransfer(recipient, sender, amount);
     }
 
-    private boolean concurrentTransfer(ConcurrentUser sender, ConcurrentUser recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
+    private boolean concurrentTransfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
         lockUsers(sender, recipient);
         try {
-            return super.transfer(sender.getUser(), recipient.getUser(), amount);
+            return super.transfer(sender, recipient, amount);
         } finally {
             unlockUsers(sender, recipient);
         }

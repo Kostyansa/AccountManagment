@@ -1,12 +1,9 @@
 package org.example.account.managment.dao;
 
-import org.example.account.managment.configuration.Configuration;
 import org.example.account.managment.entity.User;
 import org.example.account.managment.exception.UserNotFoundException;
-import org.example.account.managment.utils.RandomGenerator;
 
 import java.io.*;
-import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,12 +17,15 @@ public class UserRepositoryImpl implements UserRepository {
      * Creates User repository from folder with relative path:
      * {@link UserRepositoryImpl#path} from files with consecutive names 0,1...
      */
-   public UserRepositoryImpl(String path, long accountNumber) throws IOException, ClassNotFoundException {
+   public UserRepositoryImpl(String path) throws IOException, ClassNotFoundException {
        this.path = path;
        List<User> users = new LinkedList<>();
-       for (int i = 0; i < accountNumber; i++) {
+       File folder = new File(path);
+       int i = 0;
+       for (final File fileEntry : folder.listFiles()) {
            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path + i))) {
                users.add((User) inputStream.readObject());
+               i++;
            }
        }
        this.users = Collections.synchronizedMap(

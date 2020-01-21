@@ -1,2 +1,4 @@
 .idea/
 target/
+/testFile.log
+/Transaction.log
