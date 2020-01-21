@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         logger.info(String.format("sent amount: %s from %s to %s", amount, sender.getId(), recipient.getId()));
         sender.setAmount(sender.getAmount() - amount);
         if (sender.getAmount() < 0){
-            logger.warn("Sender amount is less than zero");
+            logger.error("Sender amount is less than zero");
         }
         recipient.setAmount(recipient.getAmount() + amount);
         logger.trace(String.format("After transaction sender amount: %s, recipient amount: %s", sender.getAmount(), recipient.getAmount()));

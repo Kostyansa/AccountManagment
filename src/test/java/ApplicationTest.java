@@ -20,6 +20,8 @@ import java.util.concurrent.Executors;
 
 public class ApplicationTest {
 
+    private static final double emptyAccountCoefficient = 1.3;
+
     private static Logger logger = LoggerFactory.getLogger("TestLogger");
 
     public void runTest(int operationNumber, int threadNumber, UserRepository userRepository){
@@ -29,7 +31,7 @@ public class ApplicationTest {
             startingAmount += user.getAmount();
             logger.info(user.toString());
         }
-        System.out.println(String.format("Total amount: %s.%s", startingAmount/100, startingAmount%100));
+        logger.info(String.format("Total amount: %s.%s", startingAmount/100, startingAmount%100));
         Controller controller = new Controller(Executors.newFixedThreadPool(threadNumber));
         for (int i = 0; i < operationNumber; i++){
             controller.ExecuteTask(new UserTransferRequest(
@@ -83,9 +85,9 @@ public class ApplicationTest {
     @ParameterizedTest
     @ValueSource(ints = {1000, 1000000, 0})
     public void requestsThroughputTest(int numberOfRequests) {
-        int accountNumbers = 2;
-        RandomGenerator.ID_RANGE = accountNumbers;
-        InitializeUsers(accountNumbers);
+        int accountNumber = 2;
+        RandomGenerator.ID_RANGE = (int) Math.floor(accountNumber*emptyAccountCoefficient);
+        InitializeUsers(accountNumber);
         InitializeConfig();
         Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
             runTest(numberOfRequests, 20, Configuration.getUserRepository());
@@ -95,9 +97,9 @@ public class ApplicationTest {
     @ParameterizedTest
     @ValueSource(ints = {20, 200, 1})
     public void threadTest(int threadNumber) {
-        int accountNumbers = 10;
-        RandomGenerator.ID_RANGE = accountNumbers;
-        InitializeUsers(accountNumbers);
+        int accountNumber = 10;
+        RandomGenerator.ID_RANGE = (int) Math.floor(accountNumber*emptyAccountCoefficient);
+        InitializeUsers(accountNumber);
         InitializeConfig();
         Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
             runTest(10000, threadNumber, Configuration.getUserRepository());
@@ -109,6 +111,27 @@ public class ApplicationTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {runTest(1000, 0, Configuration.getUserRepository());}
                 );
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {50, 500})
+    public void userAccountTest(int accountNumber){
+        RandomGenerator.ID_RANGE = (int) Math.floor(accountNumber*emptyAccountCoefficient);
+        InitializeUsers(accountNumber);
+        InitializeConfig();
+        Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
+            runTest(10000, 20, Configuration.getUserRepository());
+        });
+    }
+
+    @Test
+    public void zeroUsersTest(){
+        RandomGenerator.ID_RANGE = 10;
+        InitializeUsers(0);
+        InitializeConfig();
+        Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
+            runTest(10000, 20, Configuration.getUserRepository());
+        });
     }
 
 }
