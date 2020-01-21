@@ -129,7 +129,7 @@ public class ApplicationTest {
         RandomGenerator.ID_RANGE = 10;
         InitializeUsers(0);
         InitializeConfig();
-        Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
+        Assertions.assertTimeout(Duration.ofSeconds(1), () -> {
             runTest(10000, 20, Configuration.getUserRepository());
         });
     }

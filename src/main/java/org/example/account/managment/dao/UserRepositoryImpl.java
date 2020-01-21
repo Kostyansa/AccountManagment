@@ -21,11 +21,9 @@ public class UserRepositoryImpl implements UserRepository {
        this.path = path;
        List<User> users = new LinkedList<>();
        File folder = new File(path);
-       int i = 0;
        for (final File fileEntry : folder.listFiles()) {
-           try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path + i))) {
+           try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileEntry))) {
                users.add((User) inputStream.readObject());
-               i++;
            }
        }
        this.users = Collections.synchronizedMap(
