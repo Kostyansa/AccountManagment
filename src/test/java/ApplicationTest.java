@@ -34,7 +34,7 @@ public class ApplicationTest {
         logger.info(String.format("Total amount: %s.%s", startingAmount/100, startingAmount%100));
         Controller controller = new Controller(Executors.newFixedThreadPool(threadNumber));
         for (int i = 0; i < operationNumber; i++){
-            controller.ExecuteTask(new UserTransferRequest(
+            controller.executeTask(new UserTransferRequest(
                     RandomGenerator.nextId(),
                     RandomGenerator.nextId().toString(),
                     RandomGenerator.nextAmount()
@@ -53,9 +53,9 @@ public class ApplicationTest {
     }
 
     public void InitializeUsers(int accountNumber) {
-        new File(Configuration.path).mkdirs();
+        new File(Configuration.pathToAccFiles).mkdirs();
         for (int i = 0; i < accountNumber; i++) {
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.path + i))) {
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Configuration.pathToAccFiles + i))) {
                 User user = RandomGenerator.nextUser(i);
                 outputStream.writeObject(user);
             } catch (FileNotFoundException e) {
@@ -75,7 +75,7 @@ public class ApplicationTest {
     @AfterEach
     public void deleteTestFolder(){
         try {
-            FileUtils.deleteDirectory(new File(Configuration.path));
+            FileUtils.deleteDirectory(new File(Configuration.pathToAccFiles));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,7 +83,7 @@ public class ApplicationTest {
 
 
     @ParameterizedTest
-    @ValueSource(ints = {1000, 1000000, 0})
+    @ValueSource(ints = {1_000, 1_000_000, 0})
     public void requestsThroughputTest(int numberOfRequests) {
         int accountNumber = 2;
         RandomGenerator.ID_RANGE = (int) Math.floor(accountNumber*emptyAccountCoefficient);
@@ -102,7 +102,7 @@ public class ApplicationTest {
         InitializeUsers(accountNumber);
         InitializeConfig();
         Assertions.assertTimeout(Duration.ofSeconds(60), () -> {
-            runTest(10000, threadNumber, Configuration.getUserRepository());
+            runTest(10_000, threadNumber, Configuration.getUserRepository());
         });
     }
 

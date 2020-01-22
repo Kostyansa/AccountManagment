@@ -11,7 +11,7 @@ import java.util.ServiceConfigurationError;
 public class Configuration {
 
     //Relative path to folder with user accounts
-    public static final String path = "./temp/";
+    public static final String pathToAccFiles = "./temp/";
 
     //User service bean
     private static UserService concurrentUserService;
@@ -24,7 +24,7 @@ public class Configuration {
      */
     public static void init() {
         try {
-            userRepository = new UserRepositoryImpl(path);
+            userRepository = new UserRepositoryImpl(pathToAccFiles);
         } catch (FileNotFoundException e) {
             throw new ServiceConfigurationError("File with user could not be found");
         } catch (IOException | ClassNotFoundException e) {

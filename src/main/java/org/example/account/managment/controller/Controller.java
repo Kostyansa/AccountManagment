@@ -12,13 +12,13 @@ public class Controller {
 
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    ExecutorService executorService;
+    private ExecutorService executorService;
 
     public Controller(ExecutorService executorService) {
         this.executorService = executorService;
     }
 
-    public void ExecuteTask(UserTransferRequest request){
+    public void executeTask(UserTransferRequest request){
         executorService.submit(request);
     }
 
@@ -32,8 +32,9 @@ public class Controller {
             // Wait a while for existing tasks to terminate
             if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
                 executorService.shutdownNow(); // Cancel currently executing tasks
-                if (!executorService.awaitTermination(60, TimeUnit.SECONDS))
+                if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
                     System.err.println("executorService did not terminate");
+                }
             }
         } catch (InterruptedException ie) {
             // Cancel if current thread also interrupted

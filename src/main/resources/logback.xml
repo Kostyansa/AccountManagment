@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <appender name="ALLFILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="ALLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>testFile.log</file>
         <append>true</append>
         <immediateFlush>true</immediateFlush>

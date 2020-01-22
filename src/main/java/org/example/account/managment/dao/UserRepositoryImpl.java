@@ -38,9 +38,8 @@ public class UserRepositoryImpl implements UserRepository {
     */
     public void saveCached(){
         List<User> users = this.get();
-        for(int i = 0; i < users.size(); i++){
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + i))) {
-                User user = users.get(i);
+        users.stream().peek((User user) -> {
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + user.getId()))) {
                 outputStream.writeObject(user);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -49,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
                 e.printStackTrace();
                 throw new ServiceConfigurationError("IO Exception", e);
             }
-        }
+        }).close();
     }
 
     @Override

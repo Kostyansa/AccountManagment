@@ -23,11 +23,10 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
         Lock firstLock;
         Lock secondLock;
         //Using global ordering for deadlock resolving
-        if (sender.getId() < recipient.getId()){
+        if (sender.getId() < recipient.getId()) {
             firstLock = sender.getLock();
             secondLock = recipient.getLock();
-        }
-        else{
+        } else {
             firstLock = recipient.getLock();
             secondLock = sender.getLock();
         }
@@ -53,8 +52,8 @@ public class ConcurrentUserServiceWrapper extends UserServiceImpl {
     }
 
     private boolean concurrentTransfer(User sender, User recipient, long amount) throws NotEnoughFundsException, IllegalRecipientException {
-        lockUsers(sender, recipient);
         try {
+            lockUsers(sender, recipient);
             return super.transfer(sender, recipient, amount);
         } finally {
             unlockUsers(sender, recipient);
